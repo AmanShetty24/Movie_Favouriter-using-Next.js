@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import MovieCard from "./Components/MovieCard";
 import { useSearch } from "./contexts/SearchContext";
 
-const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY;  // Replace with your real API key
+const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY;  
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
