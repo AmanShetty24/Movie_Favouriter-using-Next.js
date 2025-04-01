@@ -1,35 +1,24 @@
-"use client";
+"use client"
 import { useFavorites } from "../contexts/MovieBookContext";
 import MovieCard from "../Components/MovieCard";
-import { useSearch } from "../contexts/SearchContext";
 
-export default function Favorites() {
+export default function FavouritePage() {
   const { favorites } = useFavorites();
-  const { search } = useSearch();
 
-  const filteredFavorites = favorites.filter((movie) => {
-    const title = movie.title || ''; 
-    const desc = movie.desc || ''; 
-    const query = search || ''; 
-
+  if (favorites.length === 0) {
     return (
-      title.toLowerCase().includes(query.toLowerCase()) ||
-      desc.toLowerCase().includes(query.toLowerCase())
+      <div className="p-4">
+        <h2 className="text-xl font-semibold">Your Favorites</h2>
+        <p>No movies added to favorites yet.</p>
+      </div>
     );
-  });
+  }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Favorites</h1>
-      <div className="flex flex-wrap gap-4">
-        {filteredFavorites.length > 0 ? (
-          filteredFavorites.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))
-        ) : (
-          <p>No favorite movies found matching your search.</p>
-        )}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      {favorites.map((movie) => (
+        <MovieCard key={movie.imdbID} movie={movie} />
+      ))}
     </div>
   );
 }

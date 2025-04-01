@@ -1,32 +1,28 @@
-"use client";
-import { createContext, useContext, useState } from "react";
-
+"use client"
+import { createContext, useContext, useState, useEffect } from "react";
 const FavoritesContext = createContext();
-
-export function useFavorites() {
-  const context = useContext(FavoritesContext);
-  if (!context) {
-    throw new Error("useFavorites must be used within a FavoritesProvider");
-  }
-  return context;
-}
-
 export function FavoritesProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
 
-  const addFavorite = (movie) => {
-    setFavorites((prevFavorites) => [...prevFavorites, movie]);
-  };
+  useEffect(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem("favourites")) || [];
+    setFavorites(savedFavorites);
+  }, []);
+  const toggleFavorite = (movie) => {
+    const updatedFavorites = favorites.some((fav) => fav.imdbID === movie.imdbID)
+      ? favorites.filter((fav) => fav.imdbID !== movie.imdbID)
+      : [...favorites, movie];
 
-  const removeFavorite = (movieID) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.filter((movie) => movie.imdbID !== movieID)
-    );
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favourites", JSON.stringify(updatedFavorites)); 
   };
 
   return (
-    <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite }}>
+    <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>
       {children}
     </FavoritesContext.Provider>
   );
+}
+export function useFavorites() {
+  return useContext(FavoritesContext);
 }
